@@ -4,6 +4,6 @@ services:
   frontend:
     build:
       context: ./
-      dockerfile: ./board_game_tracker/
+      dockerfile: ./board_game_tracker/DockerFile
     ports:
       - "9999"
