@@ -1,4 +1,4 @@
-version: '3'
+version: '3.1'
 
 services:
   frontend:
@@ -7,7 +7,7 @@ services:
       dockerfile: ./DockerFile
     ports:
       - 9999:80
-      
+
   mongo:
     image: mongo
     restart: always
