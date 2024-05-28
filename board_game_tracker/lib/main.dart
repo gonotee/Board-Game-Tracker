@@ -1,10 +1,7 @@
-import 'dart:convert';
-
+import 'package:board_game_tracker/widgets/navigation/mygames_page.dart';
+import 'package:board_game_tracker/widgets/navigation/searchgames_page.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:xml2json/xml2json.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'models/bggModels.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,13 +32,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Future<BggItem> futureItem;
-
-  @override
-  void initState() {
-    super.initState();
-    futureItem = fetchGame('266192');
-  }
+  Widget _page = const MyGamesPage();
 
   // Snake bar variables
   ShapeBorder? bottomBarShape = const RoundedRectangleBorder(
@@ -75,32 +66,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: true,
       extendBody: true,
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            FutureBuilder<BggItem>(
-              future: futureItem,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(snapshot.data!.items!.item!.name!.value ??
-                      'Failed to find');
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
-            Text(_selectedItemPosition.toString()),
-          ],
-        ),
-      ),
+      body: Center(child: _page),
       bottomNavigationBar: SnakeNavigationBar.color(
         behaviour: snakeBarStyle,
         snakeShape: snakeShape,
@@ -123,8 +95,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
         currentIndex: _selectedItemPosition,
         onTap: (index) => setState(() {
+          if (index == 4) {
+            _page = SearchGamesPage();
+          } else {
+            _page = MyGamesPage();
+          }
           _selectedItemPosition = index;
-          futureItem = fetchGame((index + 1).toString());
         }),
         items: const [
           BottomNavigationBarItem(
@@ -140,20 +116,5 @@ class _MyHomePageState extends State<MyHomePage> {
         unselectedLabelStyle: const TextStyle(fontSize: 10),
       ),
     );
-  }
-
-  Future<BggItem> fetchGame(String id) async {
-    final myTransformer = Xml2Json();
-
-    final response = await http
-        .get(Uri.parse("https://boardgamegeek.com/xmlapi2/thing?id=$id"));
-
-    if (response.statusCode == 200) {
-      myTransformer.parse(response.body);
-      var convertedToJson = myTransformer.toBadgerfish();
-      return bggItemFromJson(convertedToJson);
-    } else {
-      throw Exception('Failed to load item');
-    }
   }
 }
