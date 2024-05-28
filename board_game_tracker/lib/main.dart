@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
+import 'package:xml2json/xml2json.dart';
+import 'models/bggModels.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,6 +54,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  late Future<BggItem> futureItem;
+
+  @override
+  void initState() {
+    super.initState();
+    futureItem = fetchGame();
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -103,6 +114,20 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            FutureBuilder<BggItem>(
+              future: futureItem,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                      snapshot.data!.items!.item!.id ?? 'Failed to find');
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+
+                // By default, show a loading spinner.
+                return const CircularProgressIndicator();
+              },
+            )
           ],
         ),
       ),
@@ -112,5 +137,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Future<BggItem> fetchGame() async {
+    final myTransformer = Xml2Json();
+
+    final response = await http
+        .get(Uri.parse("https://boardgamegeek.com/xmlapi2/thing?id=266192"));
+
+    if (response.statusCode == 200) {
+      myTransformer.parse(response.body);
+      var convertedToJson = myTransformer.toBadgerfish();
+      return bggItemFromJson(convertedToJson);
+    } else {
+      throw Exception('Failed to load item');
+    }
   }
 }
