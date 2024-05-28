@@ -49,7 +49,7 @@ class Item {
   String? id;
   Description? thumbnail;
   Description? image;
-  List<Name>? name;
+  Name? name;
   Description? description;
   Maxplayers? yearpublished;
   Maxplayers? minplayers;
@@ -88,8 +88,10 @@ class Item {
         image:
             json["image"] == null ? null : Description.fromJson(json["image"]),
         name: json["name"] == null
-            ? []
-            : List<Name>.from(json["name"]!.map((x) => Name.fromJson(x))),
+            ? null
+            : json["name"] is List<dynamic>
+                ? Name.fromJson(json["name"][0])
+                : Name.fromJson(json["name"]),
         description: json["description"] == null
             ? null
             : Description.fromJson(json["description"]),
@@ -126,9 +128,7 @@ class Item {
         "@id": id,
         "thumbnail": thumbnail?.toJson(),
         "image": image?.toJson(),
-        "name": name == null
-            ? []
-            : List<dynamic>.from(name!.map((x) => x.toJson())),
+        "name": name?.toJson(),
         "description": description?.toJson(),
         "yearpublished": yearpublished?.toJson(),
         "minplayers": minplayers?.toJson(),
