@@ -39,6 +39,7 @@ dependencies:
   build_web_compilers: ^3.2.7
   http: ^0.13.6
   xml2json: ^5.3.6
+  flutter_snake_navigationbar: ^0.6.1
 
 dev_dependencies:
   flutter_test:
