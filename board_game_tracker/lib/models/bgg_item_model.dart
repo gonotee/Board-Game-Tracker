@@ -24,6 +24,14 @@ class BggItem {
   Map<String, dynamic> toJson() => {
         "items": items?.toJson(),
       };
+
+  bool hasThumbnail() {
+    if (items!.item!.thumbnail!.empty != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 class Items {

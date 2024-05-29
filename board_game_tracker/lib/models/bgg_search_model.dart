@@ -43,6 +43,10 @@ class BggSearch {
     concatNameYear = '$concatNameYear (${getYearPublishedAtIndex(index)})';
     return concatNameYear;
   }
+
+  String getIdAtIndex(int index) {
+    return items!.item![index].id ?? 'Failed to fetch id';
+  }
 }
 
 class Items {

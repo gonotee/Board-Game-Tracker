@@ -18,7 +18,7 @@ class _SearchGamesPageState extends State<SearchGamesPage> {
   @override
   void initState() {
     super.initState();
-    _searchData = BggApiHelper.searchBgg('betrayal at');
+    _searchData = BggApiHelper.searchBggForGames('betrayal at');
   }
 
   @override
@@ -67,8 +67,8 @@ class _SearchGamesPageState extends State<SearchGamesPage> {
                     itemCount: int.parse(snapshot.data?.items!.total ?? '0'),
                     itemBuilder: (context, index) {
                       return SearchGameListTile(
-                        snapshot: snapshot,
-                        index: index,
+                        searchSnapshot: snapshot,
+                        searchIndex: index,
                       );
                     });
               } else if (snapshot.hasError) {
@@ -87,7 +87,7 @@ class _SearchGamesPageState extends State<SearchGamesPage> {
     if (_formKey.currentState!.validate()) {
       String sanitizedQuery = prepareQuery(searchTermController.value.text);
       setState(() {
-        _searchData = BggApiHelper.searchBgg(sanitizedQuery);
+        _searchData = BggApiHelper.searchBggForGames(sanitizedQuery);
       });
     }
   }
