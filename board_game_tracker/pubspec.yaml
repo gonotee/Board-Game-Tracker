@@ -41,6 +41,8 @@ dependencies:
   xml2json: ^5.3.6
   flutter_snake_navigationbar: ^0.6.1
   google_fonts: ^4.0.4
+  firebase_core: ^2.24.2
+  cloud_firestore: ^4.14.0
 
 dev_dependencies:
   flutter_test:

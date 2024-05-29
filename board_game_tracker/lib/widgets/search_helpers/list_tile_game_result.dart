@@ -1,6 +1,7 @@
 import 'package:board_game_tracker/models/bgg_item_model.dart';
 import 'package:board_game_tracker/models/bgg_search_model.dart';
 import 'package:board_game_tracker/services/bgg_api.dart';
+import 'package:board_game_tracker/services/firebase.dart';
 import 'package:flutter/material.dart';
 
 class SearchGameListTile extends StatelessWidget {
@@ -82,7 +83,9 @@ class PostLoadInfoTile extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Database.addDoc();
+                          },
                           style: ElevatedButton.styleFrom(
                               shape: const CircleBorder()),
                           child: const Padding(

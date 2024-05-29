@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "259740791539",
+    "project_id": "board-game-tracker-725a8",
+    "storage_bucket": "board-game-tracker-725a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259740791539:android:b78a2a21879bfc31687d86",
+        "android_client_info": {
+          "package_name": "com.example.board_game_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3g1ceckGv4sRxilIAim90ZgjZJ3gpFbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
