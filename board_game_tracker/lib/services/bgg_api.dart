@@ -19,11 +19,11 @@ class BggApiHelper {
     }
   }
 
-  static Future<BggSearch> searchBgg(String query) async {
+  static Future<BggSearch> searchBggForGames(String query) async {
     final myTransformer = Xml2Json();
 
-    final response = await http.get(
-        Uri.parse("https://boardgamegeek.com/xmlapi2/search?query=$query"));
+    final response = await http.get(Uri.parse(
+        "https://boardgamegeek.com/xmlapi2/search?query=$query&type=boardgame"));
     if (response.statusCode == 200) {
       myTransformer.parse(response.body);
       var convertedToJson = myTransformer.toBadgerfish();
