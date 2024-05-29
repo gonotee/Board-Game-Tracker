@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         currentIndex: _selectedItemPosition,
         onTap: (index) => setState(() {
-          if (index == 4) {
+          if (index == 3) {
             _page = const SearchGamesPage();
           } else {
             _page = const MyGamesPage();
@@ -112,9 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.access_alarm), label: 'calendar'),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.podcasts), label: 'microphone'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'search')
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'search'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'settings')
         ],
         selectedLabelStyle: const TextStyle(fontSize: 14),
         unselectedLabelStyle: const TextStyle(fontSize: 10),
