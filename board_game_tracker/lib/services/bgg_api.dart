@@ -20,7 +20,6 @@ class BggApiHelper {
   }
 
   static Future<BggSearch> searchBgg(String query) async {
-    print(query);
     final myTransformer = Xml2Json();
 
     final response = await http.get(

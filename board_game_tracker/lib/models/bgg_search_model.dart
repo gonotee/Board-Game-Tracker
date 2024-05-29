@@ -2,6 +2,8 @@
 //
 //     final bggSearch = bggSearchFromJson(jsonString);
 
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 
 BggSearch bggSearchFromJson(String str) => BggSearch.fromJson(json.decode(str));
@@ -9,17 +11,33 @@ BggSearch bggSearchFromJson(String str) => BggSearch.fromJson(json.decode(str));
 String bggSearchToJson(BggSearch data) => json.encode(data.toJson());
 
 class BggSearch {
+  Items? items;
+
+  BggSearch({
+    this.items,
+  });
+
+  factory BggSearch.fromJson(Map<String, dynamic> json) => BggSearch(
+        items: json["items"] == null ? null : Items.fromJson(json["items"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "items": items?.toJson(),
+      };
+}
+
+class Items {
   String? total;
   String? termsofuse;
   List<Item>? item;
 
-  BggSearch({
-    this.total = '0',
+  Items({
+    this.total,
     this.termsofuse,
     this.item,
   });
 
-  factory BggSearch.fromJson(Map<String, dynamic> json) => BggSearch(
+  factory Items.fromJson(Map<String, dynamic> json) => Items(
         total: json["@total"],
         termsofuse: json["@termsofuse"],
         item: json["item"] == null

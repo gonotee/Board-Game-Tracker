@@ -17,7 +17,7 @@ class _SearchGamesPageState extends State<SearchGamesPage> {
   @override
   void initState() {
     super.initState();
-    _searchData = BggApiHelper.searchBgg('catan');
+    _searchData = BggApiHelper.searchBgg('betrayal at');
   }
 
   @override
@@ -63,11 +63,12 @@ class _SearchGamesPageState extends State<SearchGamesPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
-                    itemCount: int.parse(snapshot.data?.total ?? '0'),
+                    itemCount: int.parse(snapshot.data?.items!.total ?? '0'),
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(snapshot.data!.item![index].name?.value ??
-                            'Failed to load name'),
+                        title: Text(
+                            snapshot.data!.items!.item![index].name?.value ??
+                                'Failed to load name'),
                       );
                     });
               } else if (snapshot.hasError) {
