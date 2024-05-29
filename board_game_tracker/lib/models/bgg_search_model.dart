@@ -94,7 +94,7 @@ class Name {
   });
 
   factory Name.fromJson(Map<String, dynamic> json) => Name(
-        type: nameTypeValues.map[json["@type"]]!,
+        type: nameTypeValues.map[json["@type"]],
         value: json["@value"],
       );
 
@@ -104,7 +104,7 @@ class Name {
       };
 }
 
-enum NameType { PRIMARY }
+enum NameType { PRIMARY, ALTERNATE }
 
 final nameTypeValues = EnumValues({"primary": NameType.PRIMARY});
 
