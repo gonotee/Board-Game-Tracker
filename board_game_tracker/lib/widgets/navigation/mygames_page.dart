@@ -1,7 +1,6 @@
 import 'package:board_game_tracker/models/bgg_item_model.dart';
+import 'package:board_game_tracker/services/bgg_api.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:xml2json/xml2json.dart';
 
 class MyGamesPage extends StatefulWidget {
   const MyGamesPage({super.key});
@@ -16,7 +15,7 @@ class _MyGamesPageState extends State<MyGamesPage> {
   @override
   void initState() {
     super.initState();
-    _futureItem = fetchGame('266192');
+    _futureItem = BggApiHelper.fetchGame('266192');
   }
 
   @override
@@ -38,20 +37,5 @@ class _MyGamesPageState extends State<MyGamesPage> {
         ),
       ],
     );
-  }
-
-  Future<BggItem> fetchGame(String id) async {
-    final myTransformer = Xml2Json();
-
-    final response = await http
-        .get(Uri.parse("https://boardgamegeek.com/xmlapi2/thing?id=$id"));
-
-    if (response.statusCode == 200) {
-      myTransformer.parse(response.body);
-      var convertedToJson = myTransformer.toBadgerfish();
-      return bggItemFromJson(convertedToJson);
-    } else {
-      throw Exception('Failed to load item');
-    }
   }
 }

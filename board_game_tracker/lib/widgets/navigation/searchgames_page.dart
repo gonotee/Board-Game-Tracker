@@ -53,9 +53,7 @@ class _SearchFormState extends State<SearchForm> {
         top: 10,
         right: 0,
         child: ElevatedButton(
-          onPressed: () {
-            // TODO do somthing here on submit
-          },
+          onPressed: submitForm,
           style: ElevatedButton.styleFrom(shape: const CircleBorder()),
           child: const Padding(
             padding: EdgeInsets.all(4.0),
@@ -64,5 +62,12 @@ class _SearchFormState extends State<SearchForm> {
         ),
       )
     ]);
+  }
+
+  submitForm() {
+    if (_formKey.currentState!.validate()) {
+      print('valid');
+      // TODO call bggapihelper to search
+    }
   }
 }
