@@ -27,7 +27,6 @@ class BggApiHelper {
     if (response.statusCode == 200) {
       myTransformer.parse(response.body);
       var convertedToJson = myTransformer.toBadgerfish();
-      print(convertedToJson);
       return bggSearchFromJson(convertedToJson);
     } else {
       throw Exception('Failed to load item');

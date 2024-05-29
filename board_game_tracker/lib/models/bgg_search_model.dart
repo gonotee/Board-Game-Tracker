@@ -24,6 +24,25 @@ class BggSearch {
   Map<String, dynamic> toJson() => {
         "items": items?.toJson(),
       };
+
+  List<Item>? getItemList() {
+    return items!.item;
+  }
+
+  String getNameAtIndex(int index) {
+    return items!.item![index].name?.value ?? 'Failed to fetch name';
+  }
+
+  String getYearPublishedAtIndex(int index) {
+    return items!.item![index].yearpublished?.value ??
+        'Failed to fetch year published';
+  }
+
+  String getNameFollowedByYearPublishedAtIndex(int index) {
+    String concatNameYear = getNameAtIndex(index);
+    concatNameYear = '$concatNameYear (${getYearPublishedAtIndex(index)})';
+    return concatNameYear;
+  }
 }
 
 class Items {
