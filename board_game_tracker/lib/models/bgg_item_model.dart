@@ -2,6 +2,8 @@
 //
 //     final bggItem = bggItemFromJson(jsonString);
 
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 
 BggItem bggItemFromJson(String str) => BggItem.fromJson(json.decode(str));

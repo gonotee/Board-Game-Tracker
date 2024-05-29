@@ -100,9 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
         currentIndex: _selectedItemPosition,
         onTap: (index) => setState(() {
           if (index == 4) {
-            _page = SearchGamesPage();
+            _page = const SearchGamesPage();
           } else {
-            _page = MyGamesPage();
+            _page = const MyGamesPage();
           }
           _selectedItemPosition = index;
         }),
