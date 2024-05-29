@@ -1,5 +1,6 @@
 import 'package:board_game_tracker/models/bgg_search_model.dart';
 import 'package:board_game_tracker/services/bgg_api.dart';
+import 'package:board_game_tracker/widgets/search_helpers/list_tile_game_result.dart';
 import 'package:flutter/material.dart';
 
 class SearchGamesPage extends StatefulWidget {
@@ -65,10 +66,9 @@ class _SearchGamesPageState extends State<SearchGamesPage> {
                 return ListView.builder(
                     itemCount: int.parse(snapshot.data?.items!.total ?? '0'),
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(
-                            snapshot.data!.items!.item![index].name?.value ??
-                                'Failed to load name'),
+                      return SearchGameListTile(
+                        snapshot: snapshot,
+                        index: index,
                       );
                     });
               } else if (snapshot.hasError) {
