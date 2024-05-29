@@ -56,7 +56,10 @@ class _SearchFormState extends State<SearchForm> {
           onPressed: () {
             // TODO do somthing here on submit
           },
-          child: Icon(Icons.search),
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Icon(Icons.search),
+          ),
           style: ElevatedButton.styleFrom(shape: CircleBorder()),
         ),
       )
