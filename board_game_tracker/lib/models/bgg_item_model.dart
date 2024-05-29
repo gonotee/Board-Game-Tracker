@@ -32,6 +32,18 @@ class BggItem {
       return false;
     }
   }
+
+  String getDescription() {
+    return sanitizeString(
+        items!.item!.description?.empty ?? 'Failed to fetch description');
+  }
+
+  /// This function sanitizes the provided string and removes any unicode or ASCII
+  String sanitizeString(String str) {
+    str = str.replaceAll('&#10', '');
+    str = str.replaceAll(';', ' ');
+    return str;
+  }
 }
 
 class Items {

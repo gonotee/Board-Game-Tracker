@@ -14,22 +14,21 @@ class SearchGameListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<BggItem> futureGame =
         BggApiHelper.fetchGame(searchSnapshot.data!.getIdAtIndex(searchIndex));
-    return Card(
-        child: FutureBuilder<BggItem>(
-            future: futureGame,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return PostLoadInfoTile(
-                    searchSnapshot: searchSnapshot,
-                    itemSnapshot: snapshot,
-                    index: searchIndex);
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              } else {
-                return PreLoadInfoTile(
-                    snapshot: searchSnapshot, index: searchIndex);
-              }
-            }));
+    return FutureBuilder<BggItem>(
+        future: futureGame,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return PostLoadInfoTile(
+                searchSnapshot: searchSnapshot,
+                itemSnapshot: snapshot,
+                index: searchIndex);
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          } else {
+            return PreLoadInfoTile(
+                snapshot: searchSnapshot, index: searchIndex);
+          }
+        });
   }
 }
 
@@ -45,12 +44,94 @@ class PostLoadInfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading:
-          Image.network(itemSnapshot.data!.items!.item!.thumbnail?.empty ?? ''),
-      title: Text(
-          searchSnapshot.data?.getNameFollowedByYearPublishedAtIndex(index) ??
-              'Data is malformed'),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.94,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(4.0, 2.0, 4.0, 0.0),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          elevation: 10,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Column(
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.28,
+                          maxHeight: MediaQuery.of(context).size.width * 0.28,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: SizedBox.fromSize(
+                            size: const Size.fromRadius(48),
+                            child: Image.network(
+                              itemSnapshot.data!.items!.item!.image?.empty ??
+                                  '',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                              shape: const CircleBorder()),
+                          child: const Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: Icon(Icons.archive),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.65,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                        child: Text(
+                          searchSnapshot.data
+                                  ?.getNameFollowedByYearPublishedAtIndex(
+                                      index) ??
+                              'Data is malformed',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.65,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+                        child: Text(
+                          itemSnapshot.data!.getDescription(),
+                          style: const TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
