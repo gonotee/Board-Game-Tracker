@@ -1,3 +1,4 @@
+import 'package:board_game_tracker/theme.dart';
 import 'package:board_game_tracker/widgets/navigation/mygames_page.dart';
 import 'package:board_game_tracker/widgets/navigation/searchgames_page.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Test Change',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          useMaterial3: true,
+          colorScheme: MaterialTheme.lightScheme().toColorScheme()),
+      darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: MaterialTheme.darkScheme().toColorScheme()),
       home: const MyHomePage(title: 'Test Change'),
     );
   }
