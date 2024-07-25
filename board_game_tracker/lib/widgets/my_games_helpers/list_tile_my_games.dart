@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/firebase_model.dart';
+
 class MyGamesList extends StatefulWidget {
   //TODO Make a model for a singular game from the list to pass from myGamesPage to here
-  const MyGamesList({super.key});
+  final DatabaseGame gameInfo;
+  const MyGamesList({super.key, required this.gameInfo});
 
   @override
   State<MyGamesList> createState() => _MyGamesListState();
@@ -50,10 +53,7 @@ class _MyGamesListState extends State<MyGamesList> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: ElevatedButton(
-                          onPressed: () {
-                            Database.addGameToOwned(itemSnapshot.data!.getId(),
-                                itemSnapshot.data!.getName());
-                          },
+                          onPressed: () {},
                           style: ElevatedButton.styleFrom(
                               shape: const CircleBorder()),
                           child: const Padding(
@@ -73,10 +73,7 @@ class _MyGamesListState extends State<MyGamesList> {
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                         child: Text(
-                          searchSnapshot.data
-                                  ?.getNameFollowedByYearPublishedAtIndex(
-                                      index) ??
-                              'Data is malformed',
+                          'Game Title',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -89,7 +86,7 @@ class _MyGamesListState extends State<MyGamesList> {
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
                         child: Text(
-                          itemSnapshot.data!.getDescription(),
+                          'Game Description',
                           style: const TextStyle(
                             fontSize: 12,
                           ),

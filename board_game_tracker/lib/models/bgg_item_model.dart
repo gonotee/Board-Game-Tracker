@@ -6,6 +6,8 @@
 
 import 'dart:convert';
 
+import 'firebase_model.dart';
+
 BggItem bggItemFromJson(String str) => BggItem.fromJson(json.decode(str));
 
 String bggItemToJson(BggItem data) => json.encode(data.toJson());

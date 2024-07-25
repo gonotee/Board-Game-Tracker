@@ -33,15 +33,26 @@ class SearchGameListTile extends StatelessWidget {
   }
 }
 
-class PostLoadInfoTile extends StatelessWidget {
+class PostLoadInfoTile extends StatefulWidget {
   final AsyncSnapshot<BggSearch> searchSnapshot;
   final AsyncSnapshot<BggItem> itemSnapshot;
   final int index;
+
   const PostLoadInfoTile(
       {super.key,
       required this.searchSnapshot,
       required this.itemSnapshot,
       required this.index});
+
+  @override
+  State<PostLoadInfoTile> createState() => _PostLoadInfoTileState();
+}
+
+class _PostLoadInfoTileState extends State<PostLoadInfoTile> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +84,7 @@ class PostLoadInfoTile extends StatelessWidget {
                           child: SizedBox.fromSize(
                             size: const Size.fromRadius(48),
                             child: Image.network(
-                              itemSnapshot.data!.getImage(),
+                              widget.itemSnapshot.data!.getImage(),
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -83,11 +94,8 @@ class PostLoadInfoTile extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Database.addGameToOwned(
-                                itemSnapshot.data!.getId(),
-                                itemSnapshot.data!.getName(),
-                                itemSnapshot.data!.getImage(),
-                                itemSnapshot.data!.getDescription());
+                            Database.addGameToOwned(Database.toDatabaseGame(
+                                widget.itemSnapshot.data!));
                           },
                           style: ElevatedButton.styleFrom(
                               shape: const CircleBorder()),
@@ -108,9 +116,9 @@ class PostLoadInfoTile extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                         child: Text(
-                          searchSnapshot.data
+                          widget.searchSnapshot.data
                                   ?.getNameFollowedByYearPublishedAtIndex(
-                                      index) ??
+                                      widget.index) ??
                               'Data is malformed',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
@@ -124,7 +132,7 @@ class PostLoadInfoTile extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
                         child: Text(
-                          itemSnapshot.data!.getDescription(),
+                          widget.itemSnapshot.data!.getDescription(),
                           style: const TextStyle(
                             fontSize: 12,
                           ),
