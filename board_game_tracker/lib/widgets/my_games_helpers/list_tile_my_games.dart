@@ -1,48 +1,15 @@
-import 'package:board_game_tracker/models/bgg_item_model.dart';
-import 'package:board_game_tracker/models/bgg_search_model.dart';
-import 'package:board_game_tracker/services/bgg_api.dart';
-import 'package:board_game_tracker/services/firebase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class SearchGameListTile extends StatelessWidget {
-  final AsyncSnapshot<BggSearch> searchSnapshot;
-  final int searchIndex;
-
-  const SearchGameListTile(
-      {super.key, required this.searchSnapshot, required this.searchIndex});
+class MyGamesList extends StatefulWidget {
+  //TODO Make a model for a singular game from the list to pass from myGamesPage to here
+  const MyGamesList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    Future<BggItem> futureGame =
-        BggApiHelper.fetchGame(searchSnapshot.data!.getIdAtIndex(searchIndex));
-    return FutureBuilder<BggItem>(
-        future: futureGame,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return PostLoadInfoTile(
-                searchSnapshot: searchSnapshot,
-                itemSnapshot: snapshot,
-                index: searchIndex);
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          } else {
-            return PreLoadInfoTile(
-                snapshot: searchSnapshot, index: searchIndex);
-          }
-        });
-  }
+  State<MyGamesList> createState() => _MyGamesListState();
 }
 
-class PostLoadInfoTile extends StatelessWidget {
-  final AsyncSnapshot<BggSearch> searchSnapshot;
-  final AsyncSnapshot<BggItem> itemSnapshot;
-  final int index;
-  const PostLoadInfoTile(
-      {super.key,
-      required this.searchSnapshot,
-      required this.itemSnapshot,
-      required this.index});
-
+class _MyGamesListState extends State<MyGamesList> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -73,7 +40,8 @@ class PostLoadInfoTile extends StatelessWidget {
                           child: SizedBox.fromSize(
                             size: const Size.fromRadius(48),
                             child: Image.network(
-                              itemSnapshot.data!.getImage(),
+                              //TODO get image from model
+                              '',
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -83,11 +51,8 @@ class PostLoadInfoTile extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Database.addGameToOwned(
-                                itemSnapshot.data!.getId(),
-                                itemSnapshot.data!.getName(),
-                                itemSnapshot.data!.getImage(),
-                                itemSnapshot.data!.getDescription());
+                            Database.addGameToOwned(itemSnapshot.data!.getId(),
+                                itemSnapshot.data!.getName());
                           },
                           style: ElevatedButton.styleFrom(
                               shape: const CircleBorder()),
@@ -138,22 +103,6 @@ class PostLoadInfoTile extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class PreLoadInfoTile extends StatelessWidget {
-  final AsyncSnapshot<BggSearch> snapshot;
-  final int index;
-  const PreLoadInfoTile(
-      {super.key, required this.snapshot, required this.index});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: const CircularProgressIndicator(),
-      title: Text(snapshot.data?.getNameFollowedByYearPublishedAtIndex(index) ??
-          'Data is malformed'),
     );
   }
 }

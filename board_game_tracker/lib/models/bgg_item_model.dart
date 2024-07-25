@@ -33,9 +33,21 @@ class BggItem {
     }
   }
 
+  String getName() {
+    return items!.item!.name?.value ?? 'Failed to fetch name';
+  }
+
+  String getId() {
+    return items!.item!.id ?? 'Failed to fetch id';
+  }
+
   String getDescription() {
     return sanitizeString(
         items!.item!.description?.empty ?? 'Failed to fetch description');
+  }
+
+  String getImage() {
+    return items!.item!.image?.empty ?? 'Failed to fetch image';
   }
 
   /// This function sanitizes the provided string and removes any unicode or ASCII
