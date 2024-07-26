@@ -2,11 +2,9 @@
 //
 //     final bggItem = bggItemFromJson(jsonString);
 
-// ignore_for_file: constant_identifier_names
-
 import 'dart:convert';
 
-import 'firebase_model.dart';
+import 'package:board_game_tracker/models/firebase_model.dart';
 
 BggItem bggItemFromJson(String str) => BggItem.fromJson(json.decode(str));
 
@@ -28,7 +26,7 @@ class BggItem {
       };
 
   bool hasThumbnail() {
-    if (items!.item!.thumbnail!.empty != null) {
+    if (items!.item!.thumbnail != null) {
       return true;
     } else {
       return false;
@@ -36,20 +34,111 @@ class BggItem {
   }
 
   String getName() {
-    return items!.item!.name?.value ?? 'Failed to fetch name';
+    return items?.item?.name?[0].value ?? 'Failed to find name';
   }
 
   String getId() {
-    return items!.item!.id ?? 'Failed to fetch id';
+    return items!.item?.id ?? 'Failed to fetch id';
   }
 
   String getDescription() {
     return sanitizeString(
-        items!.item!.description?.empty ?? 'Failed to fetch description');
+        items?.item?.description?.empty ?? 'Failed to find description');
   }
 
   String getImage() {
-    return items!.item!.image?.empty ?? 'Failed to fetch image';
+    return items?.item?.image?.empty ?? 'Failed to fetch image';
+  }
+
+  String getYearPublished() {
+    return items?.item?.yearpublished?.value ?? '0000';
+  }
+
+  String getMinAge() {
+    return items?.item?.minage?.value ?? '0';
+  }
+
+  String getMaxPlayers() {
+    return items?.item?.maxplayers?.value ?? '0';
+  }
+
+  String getMinPlayers() {
+    return items?.item?.minplayers?.value ?? '0';
+  }
+
+  ComRecPlayers getComRecPlayers() {
+    int currentHighestVotes = 0;
+    String bestPlayerNum = '0';
+    List<String> recommendedPlayerNums = [];
+
+    if (items!.item!.poll![0].name == 'suggested_numplayers') {
+      for (int i = 0; i < items!.item!.poll![0].results.length; i++) {
+        if (int.parse(
+                items!.item!.poll![0].results[i]["result"][0]["@numvotes"]) >
+            currentHighestVotes) {
+          currentHighestVotes = int.parse(
+              items!.item!.poll![0].results[i]["result"][0]["@numvotes"]);
+          bestPlayerNum = items!.item!.poll![0].results[i]["@numplayers"];
+        }
+        if (int.parse(
+                items!.item!.poll![0].results[i]["result"][1]["@numvotes"]) >
+            int.parse(
+                items!.item!.poll![0].results[i]["result"][2]["@numvotes"])) {
+          recommendedPlayerNums.add(
+              bestPlayerNum = items!.item!.poll![0].results[i]["@numplayers"]);
+        }
+      }
+      print(bestPlayerNum);
+      print(recommendedPlayerNums);
+      return ComRecPlayers(
+          bestPlayerNum: bestPlayerNum,
+          recommendedPlayerNums: recommendedPlayerNums);
+    } else {
+      return ComRecPlayers(bestPlayerNum: '0', recommendedPlayerNums: []);
+    }
+  }
+
+  String getMaxPlaytime() {
+    return items?.item?.maxplaytime?.value ?? '0';
+  }
+
+  String getMinPlaytime() {
+    return items?.item?.minplaytime?.value ?? '0';
+  }
+
+  String getAveragePlaytime() {
+    return items?.item?.playingtime?.value ?? '0';
+  }
+
+  GameTags getTags() {
+    GameTags gameTags = GameTags(
+        categoryTags: [],
+        mechanicTags: [],
+        designerTags: [],
+        artistTags: [],
+        publisherTags: []);
+
+    for (int i = 0; i < items!.item!.link!.length; i++) {
+      Tag currentTag = Tag(
+          type:
+              items!.item!.link![i].type.toString().substring(9).toLowerCase(),
+          id: items!.item!.link![i].id.toString(),
+          value: items!.item!.link![i].value.toString());
+      print(currentTag.toString());
+      if (currentTag.type == 'boardgamecategory') {
+        gameTags.categoryTags.add(currentTag);
+      } else if (currentTag.type == 'boardgamemechanic') {
+        gameTags.mechanicTags.add(currentTag);
+      } else if (currentTag.type == 'boardgamedesigner') {
+        gameTags.designerTags.add(currentTag);
+      } else if (currentTag.type == 'boardgameartist') {
+        gameTags.artistTags.add(currentTag);
+      } else if (currentTag.type == 'boardgamepublisher') {
+        gameTags.publisherTags.add(currentTag);
+      }
+    }
+    print(gameTags.mechanicTags);
+    return gameTags;
   }
 
   /// This function sanitizes the provided string and removes any unicode or ASCII
@@ -85,7 +174,7 @@ class Item {
   String? id;
   Description? thumbnail;
   Description? image;
-  Name? name;
+  List<Name>? name;
   Description? description;
   Maxplayers? yearpublished;
   Maxplayers? minplayers;
@@ -124,10 +213,10 @@ class Item {
         image:
             json["image"] == null ? null : Description.fromJson(json["image"]),
         name: json["name"] == null
-            ? null
-            : json["name"] is List<dynamic>
-                ? Name.fromJson(json["name"][0])
-                : Name.fromJson(json["name"]),
+            ? []
+            : json['name'] is List<dynamic>
+                ? List<Name>.from(json["name"]!.map((x) => Name.fromJson(x)))
+                : [Name.fromJson(json['name'])],
         description: json["description"] == null
             ? null
             : Description.fromJson(json["description"]),
@@ -164,7 +253,9 @@ class Item {
         "@id": id,
         "thumbnail": thumbnail?.toJson(),
         "image": image?.toJson(),
-        "name": name?.toJson(),
+        "name": name == null
+            ? []
+            : List<dynamic>.from(name!.map((x) => x.toJson())),
         "description": description?.toJson(),
         "yearpublished": yearpublished?.toJson(),
         "minplayers": minplayers?.toJson(),
@@ -226,11 +317,11 @@ enum LinkType {
   BOARDGAMEACCESSORY,
   BOARDGAMEARTIST,
   BOARDGAMECATEGORY,
+  BOARDGAMECOMPILATION,
   BOARDGAMEDESIGNER,
   BOARDGAMEEXPANSION,
   BOARDGAMEFAMILY,
   BOARDGAMEIMPLEMENTATION,
-  BOARDGAMEINTEGRATION,
   BOARDGAMEMECHANIC,
   BOARDGAMEPUBLISHER
 }
@@ -239,11 +330,11 @@ final linkTypeValues = EnumValues({
   "boardgameaccessory": LinkType.BOARDGAMEACCESSORY,
   "boardgameartist": LinkType.BOARDGAMEARTIST,
   "boardgamecategory": LinkType.BOARDGAMECATEGORY,
+  "boardgamecompilation": LinkType.BOARDGAMECOMPILATION,
   "boardgamedesigner": LinkType.BOARDGAMEDESIGNER,
   "boardgameexpansion": LinkType.BOARDGAMEEXPANSION,
   "boardgamefamily": LinkType.BOARDGAMEFAMILY,
   "boardgameimplementation": LinkType.BOARDGAMEIMPLEMENTATION,
-  "boardgameintegration": LinkType.BOARDGAMEINTEGRATION,
   "boardgamemechanic": LinkType.BOARDGAMEMECHANIC,
   "boardgamepublisher": LinkType.BOARDGAMEPUBLISHER
 });

@@ -6,23 +6,33 @@ import '../models/bgg_item_model.dart';
 class Database {
   static addGameToOwned(DatabaseGame game) {
     final db = FirebaseFirestore.instance;
-    // Create a new game with a name and id
-    final databaseGame = DatabaseGame(
-        name: game.name,
-        id: game.id,
-        image: game.image,
-        description: game.description);
 
-// Add a new document with a generated ID
-    db.collection("ownedGames").doc(databaseGame.id).set(databaseGame.toMap());
+    // Add a new document using the BGG id as the doc id
+    db.collection("ownedGames").doc(game.id).set(game.toMap());
   }
 
   static DatabaseGame toDatabaseGame(BggItem bggItem) {
+    GameTags gameTags = bggItem.getTags();
     DatabaseGame newGame = DatabaseGame(
         id: bggItem.getId(),
         name: bggItem.getName(),
         image: bggItem.getImage(),
-        description: bggItem.getDescription());
+        description: bggItem.getDescription(),
+        yearPublished: bggItem.getYearPublished(),
+        minPlayers: bggItem.getMinPlayers(),
+        maxPlayers: bggItem.getMaxPlayers(),
+        communityRecommendedPlayers: bggItem.getComRecPlayers(),
+        minPlaytime: bggItem.getMinPlaytime(),
+        maxPlaytime: bggItem.getMaxPlaytime(),
+        averagePlaytime: bggItem.getAveragePlaytime(),
+        personalAveragePlaytime: '0',
+        minAge: bggItem.getMinAge(),
+        complexity: '0',
+        categoryTags: gameTags.categoryTags,
+        mechanicTags: gameTags.mechanicTags,
+        designerTags: gameTags.designerTags,
+        artistTags: gameTags.artistTags,
+        publisherTags: gameTags.publisherTags);
 
     return newGame;
   }

@@ -45,7 +45,15 @@ class BggSearch {
   }
 
   String getIdAtIndex(int index) {
-    return items!.item![index].id ?? 'Failed to fetch id';
+    if (items != null) {
+      if (items!.item != null) {
+        if (items!.item![index].id != null) {
+          var variable = items!.item![index].id ?? 'Failed to fetch id';
+          return items!.item![index].id ?? 'Failed to fetch id';
+        }
+      }
+    }
+    return 'Failed to fetch id';
   }
 }
 

@@ -64,7 +64,7 @@ class _SearchGamesPageState extends State<SearchGamesPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
-                    itemCount: int.parse(snapshot.data?.items!.total ?? '0'),
+                    itemCount: int.parse(snapshot.data!.items?.total ?? '0'),
                     itemBuilder: (context, index) {
                       return SearchGameListTile(
                         searchSnapshot: snapshot,

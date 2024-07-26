@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 
 class BggApiHelper {
   static Future<BggItem> fetchGame(String id) async {
+    if (id == '0') {
+      return BggItem();
+    }
     final myTransformer = Xml2Json();
 
     final response = await http

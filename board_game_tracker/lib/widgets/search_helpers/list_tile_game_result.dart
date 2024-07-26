@@ -13,8 +13,8 @@ class SearchGameListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<BggItem> futureGame =
-        BggApiHelper.fetchGame(searchSnapshot.data!.getIdAtIndex(searchIndex));
+    Future<BggItem> futureGame = BggApiHelper.fetchGame(
+        searchSnapshot.data?.getIdAtIndex(searchIndex) ?? '0');
     return FutureBuilder<BggItem>(
         future: futureGame,
         builder: (context, snapshot) {
@@ -84,7 +84,7 @@ class _PostLoadInfoTileState extends State<PostLoadInfoTile> {
                           child: SizedBox.fromSize(
                             size: const Size.fromRadius(48),
                             child: Image.network(
-                              widget.itemSnapshot.data!.getImage(),
+                              widget.itemSnapshot.data?.getImage() ?? '',
                               fit: BoxFit.fill,
                             ),
                           ),
